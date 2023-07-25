@@ -23,7 +23,11 @@
   "dependencies": {
     "@electron-toolkit/preload": "^2.0.0",
     "@electron-toolkit/utils": "^2.0.0",
-    "electron-updater": "^6.1.1"
+    "@heroicons/react": "^2.0.18",
+    "@phosphor-icons/react": "^2.0.10",
+    "electron-updater": "^6.1.1",
+    "uuid": "^9.0.0",
+    "zustand": "^4.3.9"
   },
   "devDependencies": {
     "@electron-toolkit/tsconfig": "^1.0.1",
