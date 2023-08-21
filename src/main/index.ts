@@ -30,9 +30,11 @@ function createWindow(): void {
     mainWindow.show()
   })
 
-  mainWindow.webContents.setWindowOpenHandler((details) => {
-    shell.openExternal(details.url)
-    return { action: 'deny' } // TODO: Analyze url and send action to render process
+  app.on('web-contents-created', (createEvent, contents) => {
+    contents.setWindowOpenHandler(({ url }) => {
+      console.log("Blocked by 'setWindowOpenHandler'")
+      return { action: 'deny' }
+    })
   })
 
   // HMR for renderer base on electron-vite cli.
