@@ -10,6 +10,7 @@ function App(): JSX.Element {
     state.currentTabIndex,
     state.setCurrentTabIndex
   ])
+  const removeWebviewById = useBearStore((state) => state.removeWebviewInstanceByIndex)
 
   return (
     <div className="container w-screen h-screen max-w-full justify-items-center">
@@ -24,7 +25,11 @@ function App(): JSX.Element {
                 const index = tabs.indexOf(tab)
                 setActiveIndex(index)
               }}
-              onClose={(): void => {}}
+              onClose={(): void => {
+                const index = tabs.indexOf(tab)
+                removeWebviewById(index)
+                setActiveIndex(index - 1)
+              }}
             >
               {tab}
             </TabSelector>

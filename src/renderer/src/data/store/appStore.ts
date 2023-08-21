@@ -6,6 +6,7 @@ interface AppState {
   currentTabIndex: number
   webviewInstances: Array<WebviewInstance>
   setCurrentTabIndex: (index: number) => void
+  removeWebviewInstanceByIndex: (index: number) => void
 }
 
 export enum WebviewType {
@@ -41,6 +42,10 @@ export const useBearStore = create<AppState>()(
     webviewInstances: [
       new WebviewInstance(WebviewType.Home, uuidv4(), '知犀', 'https://www.zhixi.com/desktop/space')
     ],
-    setCurrentTabIndex: (index: number): void => set(() => ({ currentTabIndex: index }))
+    setCurrentTabIndex: (index: number): void => set(() => ({ currentTabIndex: index })),
+    removeWebviewInstanceByIndex: (index: number): void =>
+      set((state) => ({
+        webviewInstances: state.webviewInstances.filter((data, idx) => idx !== index)
+      }))
   }))
 )
