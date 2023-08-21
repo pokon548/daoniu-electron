@@ -40,7 +40,7 @@ export const useBearStore = create<AppState>()(
   subscribeWithSelector((set) => ({
     currentTabIndex: 0,
     webviewInstances: [
-      new WebviewInstance(WebviewType.Home, uuidv4(), '知犀', 'https://www.zhixi.com/desktop/space')
+      new WebviewInstance(WebviewType.Home, uuidv4(), '首页', 'https://www.zhixi.com/desktop/space')
     ],
     setCurrentTabIndex: (index: number): void => set(() => ({ currentTabIndex: index })),
     removeWebviewInstanceByIndex: (index: number): void =>

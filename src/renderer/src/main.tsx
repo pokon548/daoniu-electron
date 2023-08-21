@@ -17,7 +17,6 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 window.api.on(ChannelType.Drawing, (arg: unknown) => {
   const message = arg as DrawingMessage
   const oldStore = useBearStore.getState().webviewInstances
-  const oldCurrentTabIndex = useBearStore.getState().currentTabIndex
 
   useBearStore.setState({
     webviewInstances: oldStore.concat([
@@ -26,7 +25,7 @@ window.api.on(ChannelType.Drawing, (arg: unknown) => {
   })
 
   useBearStore.setState({
-    currentTabIndex: oldCurrentTabIndex + 1
+    currentTabIndex: oldStore.length
   })
 })
 
