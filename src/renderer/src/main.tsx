@@ -3,7 +3,10 @@ import ReactDOM from 'react-dom/client'
 import './styles/global.css'
 import App from './App'
 
-import { CHANNEL_NAME } from '../../common/magicDef'
+import { ChannelType, DrawingMessage } from '../../common/magicDef'
+import { WebviewInstance, WebviewType, useBearStore } from './data/store/appStore'
+
+import { v4 as uuidv4 } from 'uuid'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
@@ -11,9 +14,20 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   </React.StrictMode>
 )
 
-// calling IPC exposed from preload script
-window.api.on(CHANNEL_NAME, (arg: unknown) => {
-  // eslint-disable-next-line no-console
-  console.log(arg)
+window.api.on(ChannelType.Drawing, (arg: unknown) => {
+  const message = arg as DrawingMessage
+  const oldStore = useBearStore.getState().webviewInstances
+  const oldCurrentTabIndex = useBearStore.getState().currentTabIndex
+
+  useBearStore.setState({
+    webviewInstances: oldStore.concat([
+      new WebviewInstance(WebviewType.Mindmap, uuidv4(), '思维导图', message.url)
+    ])
+  })
+
+  useBearStore.setState({
+    currentTabIndex: oldCurrentTabIndex + 1
+  })
 })
-window.api.sendMessage(CHANNEL_NAME, ['ping'])
+
+// window.api.sendMessage(CHANNEL_NAME, ['ping'])

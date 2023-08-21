@@ -1,8 +1,8 @@
-import { app, shell, BrowserWindow, ipcMain, ipcRenderer } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import { CHANNEL_NAME } from '../common/magicDef'
+import { ChannelType, DrawingMessage } from '../common/magicDef'
 
 function createWindow(): void {
   // Create the browser window.
@@ -24,12 +24,10 @@ function createWindow(): void {
     mainWindow.show()
   })
 
-  app.on('web-contents-created', (createEvent, contents) => {
+  app.on('web-contents-created', (_createEvent, contents) => {
     contents.setWindowOpenHandler(({ url }) => {
-      console.log("Blocked by 'setWindowOpenHandler'")
       if (url.startsWith('https://www.zhixi.com/drawing/')) {
-        const msgTemplate = (pingPong: string): string => `IPC test: ${pingPong}`
-        mainWindow.webContents.send(CHANNEL_NAME, msgTemplate('drawing'))
+        mainWindow.webContents.send(ChannelType.Drawing, new DrawingMessage(url))
       }
       return { action: 'deny' }
     })

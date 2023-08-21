@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { devtools, persist } from 'zustand/middleware'
+import { subscribeWithSelector } from 'zustand/middleware'
 import { v4 as uuidv4 } from 'uuid'
 
 interface AppState {
@@ -35,23 +35,10 @@ export class WebviewInstance implements IWebviewInstance {
 }
 
 export const useBearStore = create<AppState>()(
-  devtools(
-    persist(
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      (set) => ({
-        currentTabIndex: 0,
-        webviewInstances: [
-          new WebviewInstance(
-            WebviewType.Home,
-            uuidv4(),
-            '知犀',
-            'https://www.zhixi.com/desktop/space'
-          )
-        ]
-      }),
-      {
-        name: 'app-storage'
-      }
-    )
-  )
+  subscribeWithSelector((set) => ({
+    currentTabIndex: 0,
+    webviewInstances: [
+      new WebviewInstance(WebviewType.Home, uuidv4(), '知犀', 'https://www.zhixi.com/desktop/space')
+    ]
+  }))
 )
