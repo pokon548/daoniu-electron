@@ -1,4 +1,5 @@
 import { HomeTab } from './components/tabs/HomeTab'
+import { MindmapTab } from './components/tabs/MindmapTab'
 import { WebviewInstance, WebviewType, useBearStore } from './data/store/appStore'
 
 import './styles/react-tabs.css'
@@ -67,12 +68,19 @@ function App(): JSX.Element {
       </div>
 
       <div className="flex flex-col tab-panel">
-        <div
-          className="w-full h-full"
-          dangerouslySetInnerHTML={{
-            __html: `<webview class="w-full h-full" src="https://www.zhixi.com/desktop/space?page=owner" allowpopups/>`
-          }}
-        />
+        {tabs.map((tab) => (
+          <div
+            className={tabs.indexOf(tab) === activeIndex ? 'w-full h-full' : 'hidden'}
+            key={tab.uuid}
+          >
+            <div
+              className="w-full h-full"
+              dangerouslySetInnerHTML={{
+                __html: `<webview class="w-full h-full" src="` + tab.url + `" allowpopups/>`
+              }}
+            />
+          </div>
+        ))}
       </div>
     </div>
   )
@@ -98,7 +106,11 @@ const TabSelector = ({
           isActive ? 'bg-zinc-100 dark:bg-zinc-700 rounded-t' : ''
         }`}
       >
-        <HomeTab title={children.title} />
+        {children.type === WebviewType.Home ? (
+          <HomeTab title={children.title} />
+        ) : (
+          <MindmapTab title={children.title} />
+        )}
 
         {isClosable ? (
           <span className="flex items-center">
