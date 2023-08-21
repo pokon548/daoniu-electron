@@ -18,6 +18,16 @@
 - 思维导图查看及编辑
 - 根据系统风格自动设置暗黑或明亮风格
 
+## ⬇️ 下载
+
+### ![NixOS](https://raw.githubusercontent.com/unixporn/distro-icons/master/SVG/nixos.svg) NixOS
+
+该软件已经打包到我的 [NUR](https://github.com/pokon548/nur-packages) 源内。只需要从源里拉取预编译版本即可
+
+### ![Linux](https://raw.githubusercontent.com/unixporn/distro-icons/master/SVG/linux.svg) 其它 Linux 发行版
+
+请前往 [Releases](https://github.com/pokon548/daoniu-electron/releases) 下载编译好的版本。目前仅上传了 AppImage，Snap 和 linux-unpacked 版本
+
 ## 🛠️ 如何编译
 推荐使用以下编译套装：
 
