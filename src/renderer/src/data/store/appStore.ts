@@ -45,7 +45,7 @@ export const useBearStore = create<AppState>()(
     setCurrentTabIndex: (index: number): void => set(() => ({ currentTabIndex: index })),
     removeWebviewInstanceByIndex: (index: number): void =>
       set((state) => ({
-        webviewInstances: state.webviewInstances.filter((data, idx) => idx !== index)
+        webviewInstances: state.webviewInstances.filter((_data, idx) => idx !== index)
       }))
   }))
 )
