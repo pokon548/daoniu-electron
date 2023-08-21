@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, ipcRenderer } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
@@ -20,12 +20,6 @@ function createWindow(): void {
     }
   })
 
-  ipcMain.on(CHANNEL_NAME, async (event, arg) => {
-    const msgTemplate = (pingPong: string): string => `IPC test: ${pingPong}`
-    console.log(msgTemplate(arg))
-    event.reply(CHANNEL_NAME, msgTemplate('pong'))
-  })
-
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
   })
@@ -33,6 +27,10 @@ function createWindow(): void {
   app.on('web-contents-created', (createEvent, contents) => {
     contents.setWindowOpenHandler(({ url }) => {
       console.log("Blocked by 'setWindowOpenHandler'")
+      if (url.startsWith('https://www.zhixi.com/drawing/')) {
+        const msgTemplate = (pingPong: string): string => `IPC test: ${pingPong}`
+        mainWindow.webContents.send(CHANNEL_NAME, msgTemplate('drawing'))
+      }
       return { action: 'deny' }
     })
   })

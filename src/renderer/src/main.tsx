@@ -12,7 +12,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 )
 
 // calling IPC exposed from preload script
-window.api.once(CHANNEL_NAME, (arg: unknown) => {
+window.api.on(CHANNEL_NAME, (arg: unknown) => {
   // eslint-disable-next-line no-console
   console.log(arg)
 })
