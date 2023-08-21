@@ -6,7 +6,10 @@ import { Minus, Square, X } from '@phosphor-icons/react'
 
 function App(): JSX.Element {
   const tabs = useBearStore((state) => state.webviewInstances)
-  const activeIndex = useBearStore((state) => state.currentTabIndex)
+  const [activeIndex, setActiveIndex] = useBearStore((state) => [
+    state.currentTabIndex,
+    state.setCurrentTabIndex
+  ])
 
   return (
     <div className="container w-screen h-screen max-w-full justify-items-center">
@@ -17,7 +20,10 @@ function App(): JSX.Element {
               key={tab.uuid}
               isActive={tabs.indexOf(tab) === activeIndex}
               isClosable={tab.type !== WebviewType.Home}
-              onClick={(): void => {}}
+              onClick={(): void => {
+                const index = tabs.indexOf(tab)
+                setActiveIndex(index)
+              }}
               onClose={(): void => {}}
             >
               {tab}

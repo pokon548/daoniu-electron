@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid'
 interface AppState {
   currentTabIndex: number
   webviewInstances: Array<WebviewInstance>
+  setCurrentTabIndex: (index: number) => void
 }
 
 export enum WebviewType {
@@ -39,6 +40,7 @@ export const useBearStore = create<AppState>()(
     currentTabIndex: 0,
     webviewInstances: [
       new WebviewInstance(WebviewType.Home, uuidv4(), '知犀', 'https://www.zhixi.com/desktop/space')
-    ]
+    ],
+    setCurrentTabIndex: (index: number): void => set(() => ({ currentTabIndex: index }))
   }))
 )
