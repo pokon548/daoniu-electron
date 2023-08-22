@@ -47,30 +47,9 @@ function createWindow(): void {
       console.log('Request body: ', buffer.toString())
     }
 
-    if (details.webContents?.canGoBack()) {
-      if (
-        details.webContents?.getURL().startsWith('https://draw.zhixi.com/tpl/') ||
-        details.webContents?.getURL().startsWith('https://draw.zhixi.com/drawing/')
-      ) {
-        mainWindow.webContents.send(
-          ChannelType.Drawing,
-          new NormalUrlMessage(details.webContents?.getURL())
-        )
-        details.webContents.stop()
-        details.webContents.goBack()
-        details.webContents.goBack()
-        details.webContents.goBack()
-        details.webContents.clearHistory()
-        callback({
-          cancel: true
-        })
-      } else {
-        console.log('Go back: ' + details.webContents.getURL())
-        callback({})
-      }
-    } else {
-      callback({})
-    }
+    console.log(details.webContents?.id)
+
+    callback({})
   })
 
   // HMR for renderer base on electron-vite cli.
