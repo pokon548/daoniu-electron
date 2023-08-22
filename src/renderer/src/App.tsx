@@ -1,4 +1,5 @@
 import { HomeTab } from './components/tabs/HomeTab'
+import { LiuchengTab } from './components/tabs/LiuchengTab'
 import { MindmapTab } from './components/tabs/MindmapTab'
 import { WebviewInstance, WebviewType, useBearStore } from './data/store/appStore'
 
@@ -107,6 +108,8 @@ const TabSelector = ({
         }`}
       >
         {children.type === WebviewType.Home ? (
+          <HomeTab title={children.title} />
+        ) : children.type === WebviewType.LiuchengHome ? (
           <HomeTab title={children.title} />
         ) : (
           <MindmapTab title={children.title} />

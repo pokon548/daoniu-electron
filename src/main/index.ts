@@ -1,14 +1,14 @@
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow, ipcMain, protocol, session, webContents } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import { ChannelType, DrawingMessage } from '../common/magicDef'
+import { ChannelType, DrawingMessage, NormalUrlMessage } from '../common/magicDef'
 
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 900,
-    height: 670,
+    width: 1280,
+    height: 800,
     show: false,
     frame: false,
     autoHideMenuBar: true,
@@ -27,10 +27,50 @@ function createWindow(): void {
   app.on('web-contents-created', (_createEvent, contents) => {
     contents.setWindowOpenHandler(({ url }) => {
       if (url.startsWith('https://www.zhixi.com/drawing/')) {
-        mainWindow.webContents.send(ChannelType.Drawing, new DrawingMessage(url))
+        mainWindow.webContents.send(ChannelType.Drawing, new NormalUrlMessage(url))
+      } else if (url.startsWith('https://www.zhixi.com/tpl/')) {
+        mainWindow.webContents.send(ChannelType.Drawing, new NormalUrlMessage(url))
+      } else if (url.startsWith('https://draw.zhixi.com/space')) {
+        mainWindow.webContents.send(ChannelType.LiuchengHome, new NormalUrlMessage(url))
+      } else if (url.startsWith('https://draw.zhixi.com/drawing/')) {
+        mainWindow.webContents.send(ChannelType.Drawing, new NormalUrlMessage(url))
+      } else {
+        console.log(url)
       }
       return { action: 'deny' }
     })
+  })
+
+  session.defaultSession.webRequest.onBeforeRequest((details, callback) => {
+    if (details.uploadData) {
+      const buffer = Array.from(details.uploadData)[0].bytes
+      console.log('Request body: ', buffer.toString())
+    }
+
+    if (details.webContents?.canGoBack()) {
+      if (
+        details.webContents?.getURL().startsWith('https://draw.zhixi.com/tpl/') ||
+        details.webContents?.getURL().startsWith('https://draw.zhixi.com/drawing/')
+      ) {
+        mainWindow.webContents.send(
+          ChannelType.Drawing,
+          new NormalUrlMessage(details.webContents?.getURL())
+        )
+        details.webContents.stop()
+        details.webContents.goBack()
+        details.webContents.goBack()
+        details.webContents.goBack()
+        details.webContents.clearHistory()
+        callback({
+          cancel: true
+        })
+      } else {
+        console.log('Go back: ' + details.webContents.getURL())
+        callback({})
+      }
+    } else {
+      callback({})
+    }
   })
 
   // HMR for renderer base on electron-vite cli.
