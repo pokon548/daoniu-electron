@@ -1,8 +1,8 @@
-import { app, BrowserWindow, ipcMain, protocol, session, webContents } from 'electron'
+import { app, BrowserWindow, ipcMain, session } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import { ChannelType, DrawingMessage, NormalUrlMessage } from '../common/magicDef'
+import { ChannelType, NormalUrlMessage } from '../common/magicDef'
 
 function createWindow(): void {
   // Create the browser window.
@@ -27,13 +27,25 @@ function createWindow(): void {
   app.on('web-contents-created', (_createEvent, contents) => {
     contents.setWindowOpenHandler(({ url }) => {
       if (url.startsWith('https://www.zhixi.com/drawing/')) {
-        mainWindow.webContents.send(ChannelType.Drawing, new NormalUrlMessage(url))
+        mainWindow.webContents.send(
+          ChannelType.Drawing,
+          new NormalUrlMessage(url, contents.getTitle(), contents.id)
+        )
       } else if (url.startsWith('https://www.zhixi.com/tpl/')) {
-        mainWindow.webContents.send(ChannelType.Drawing, new NormalUrlMessage(url))
+        mainWindow.webContents.send(
+          ChannelType.Drawing,
+          new NormalUrlMessage(url, contents.getTitle(), contents.id)
+        )
       } else if (url.startsWith('https://draw.zhixi.com/space')) {
-        mainWindow.webContents.send(ChannelType.LiuchengHome, new NormalUrlMessage(url))
+        mainWindow.webContents.send(
+          ChannelType.LiuchengHome,
+          new NormalUrlMessage(url, contents.getTitle(), contents.id)
+        )
       } else if (url.startsWith('https://draw.zhixi.com/drawing/')) {
-        mainWindow.webContents.send(ChannelType.Drawing, new NormalUrlMessage(url))
+        mainWindow.webContents.send(
+          ChannelType.Drawing,
+          new NormalUrlMessage(url, contents.getTitle(), contents.id)
+        )
       } else {
         console.log(url)
       }
@@ -42,12 +54,18 @@ function createWindow(): void {
   })
 
   session.defaultSession.webRequest.onBeforeRequest((details, callback) => {
-    if (details.uploadData) {
-      const buffer = Array.from(details.uploadData)[0].bytes
-      console.log('Request body: ', buffer.toString())
-    }
+    if (details.webContents) {
+      const title = details.webContents?.getTitle()
+      const id = details.webContents?.id
+      const url = details.webContents?.getURL()
 
-    console.log(details.webContents?.id)
+      console.log(title + ', ' + id + ', ' + url)
+
+      mainWindow.webContents.send(
+        ChannelType.GeneralUpdateHistory,
+        new NormalUrlMessage(url, title, id)
+      )
+    }
 
     callback({})
   })

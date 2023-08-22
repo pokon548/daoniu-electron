@@ -22,6 +22,9 @@ interface IWebviewInstance {
   uuid: string
   title: string
   url: string
+  historyTitle: string[]
+  historyUrl: string[]
+  webId: number
 }
 
 export class WebviewInstance implements IWebviewInstance {
@@ -29,12 +32,26 @@ export class WebviewInstance implements IWebviewInstance {
   uuid: string
   title: string
   url: string
+  historyTitle: string[]
+  historyUrl: string[]
+  webId: number
 
-  constructor(type: WebviewType, uuid: string, title: string, url: string) {
+  constructor(
+    type: WebviewType,
+    uuid: string,
+    title: string,
+    url: string,
+    historyTitle: string[],
+    historyUrl: string[],
+    webId: number
+  ) {
     this.type = type
     this.uuid = uuid
     this.title = title
     this.url = url
+    this.historyTitle = historyTitle
+    this.historyUrl = historyUrl
+    this.webId = webId
   }
 }
 
@@ -42,7 +59,15 @@ export const useBearStore = create<AppState>()(
   subscribeWithSelector((set) => ({
     currentTabIndex: 0,
     webviewInstances: [
-      new WebviewInstance(WebviewType.Home, uuidv4(), '首页', 'https://www.zhixi.com/space')
+      new WebviewInstance(
+        WebviewType.Home,
+        uuidv4(),
+        '首页',
+        'https://www.zhixi.com/space',
+        ['首页'],
+        ['https://www.zhixi.com/space'],
+        -1
+      ) // We don't know the webId for now, will be updated later
     ],
     setCurrentTabIndex: (index: number): void => set(() => ({ currentTabIndex: index })),
     removeWebviewInstanceByIndex: (index: number): void =>
