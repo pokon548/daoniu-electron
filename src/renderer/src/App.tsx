@@ -7,6 +7,8 @@ import { WebviewInstance, WebviewType, useBearStore } from './data/store/appStor
 import './styles/react-tabs.css'
 import { Minus, Square, X } from '@phosphor-icons/react'
 import { subscribe, unsubscribe } from './lib/customWebviewEvent'
+import { WebviewTag } from 'electron'
+import { LiuchengTab } from './components/tabs/LiuchengTab'
 
 function App(): JSX.Element {
   const tabs = useBearStore((state) => state.webviewInstances)
@@ -22,10 +24,19 @@ function App(): JSX.Element {
   useEffect(() => {
     subscribe('did-navigate', (event) => {
       event.preventDefault()
-      const webview = event.target as HTMLElement
-      const id = webview.getAttribute('internalTabIndex')
-      const url = event.url
-      console.log('Request coming from webview ' + id + ' and the url is: ' + url)
+      const webview = event.target as WebviewTag
+      const tab = tabs.at(Number(webview.getAttribute('internalTabIndex')))
+
+      const uuid = tab?.uuid
+      const type = tab?.type
+      const newUrl = webview.getURL()
+
+      console.log('Request coming from webview ' + uuid + ' and the url is: ' + newUrl)
+
+      if (type === WebviewType.Home) {
+        console.log("It's home")
+      } else if (type === WebviewType.Mindmap) {
+      }
 
       unsubscribe('did-navigate', () => {})
     })
@@ -130,6 +141,8 @@ const TabSelector = ({
           <HomeTab title={children.title} />
         ) : children.type === WebviewType.GeneralWebview ? (
           <GeneralWebviewTab title={children.title} />
+        ) : children.type === WebviewType.Liucheng ? (
+          <LiuchengTab title={children.title} />
         ) : (
           <MindmapTab title={children.title} />
         )}

@@ -82,3 +82,26 @@ window.api.on(ChannelType.LiuchengHome, (arg: unknown) => {
     currentTabIndex: oldStore.length
   })
 })
+
+window.api.on(ChannelType.Liucheng, (arg: unknown) => {
+  const message = arg as NormalUrlMessage
+  const oldStore = useBearStore.getState().webviewInstances
+
+  useBearStore.setState({
+    webviewInstances: oldStore.concat([
+      new WebviewInstance(
+        WebviewType.Liucheng,
+        uuidv4(),
+        '流程图',
+        message.url,
+        [message.title],
+        [message.url],
+        message.webId
+      )
+    ])
+  })
+
+  useBearStore.setState({
+    currentTabIndex: oldStore.length
+  })
+})

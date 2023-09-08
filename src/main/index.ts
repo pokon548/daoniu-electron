@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, session } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
@@ -43,7 +43,7 @@ function createWindow(): void {
         )
       } else if (url.startsWith('https://draw.zhixi.com/drawing/')) {
         mainWindow.webContents.send(
-          ChannelType.Drawing,
+          ChannelType.Liucheng,
           new NormalUrlMessage(url, contents.getTitle(), contents.id)
         )
       } else if (url === 'https://www.zhixi.com/space?page=owner') {
