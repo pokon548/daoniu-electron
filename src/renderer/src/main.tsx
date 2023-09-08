@@ -37,6 +37,29 @@ window.api.on(ChannelType.Drawing, (arg: unknown) => {
   })
 })
 
+window.api.on(ChannelType.Website, (arg: unknown) => {
+  const message = arg as NormalUrlMessage
+  const oldStore = useBearStore.getState().webviewInstances
+
+  useBearStore.setState({
+    webviewInstances: oldStore.concat([
+      new WebviewInstance(
+        WebviewType.GeneralWebview,
+        uuidv4(),
+        '网页',
+        message.url,
+        [message.title],
+        [message.url],
+        message.webId
+      )
+    ])
+  })
+
+  useBearStore.setState({
+    currentTabIndex: oldStore.length
+  })
+})
+
 window.api.on(ChannelType.LiuchengHome, (arg: unknown) => {
   const message = arg as NormalUrlMessage
   const oldStore = useBearStore.getState().webviewInstances

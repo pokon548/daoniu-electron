@@ -47,7 +47,10 @@ function createWindow(): void {
           new NormalUrlMessage(url, contents.getTitle(), contents.id)
         )
       } else {
-        console.log(url)
+        mainWindow.webContents.send(
+          ChannelType.Website,
+          new NormalUrlMessage(url, contents.getTitle(), contents.id)
+        )
       }
       return { action: 'deny' }
     })

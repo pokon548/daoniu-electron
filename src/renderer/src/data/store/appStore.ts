@@ -14,6 +14,7 @@ export enum WebviewType {
   Mindmap,
   LiuchengHome,
   Liucheng,
+  GeneralWebview,
   Other
 }
 
