@@ -5,7 +5,7 @@ import { MindmapTab } from './components/tabs/MindmapTab'
 import { WebviewInstance, WebviewType, useBearStore } from './data/store/appStore'
 
 import './styles/react-tabs.css'
-import { Minus, Square, X } from '@phosphor-icons/react'
+import { ArrowClockwise, ArrowLeft, ArrowRight, Minus, Square, X } from '@phosphor-icons/react'
 import { subscribe, unsubscribe } from './lib/customWebviewEvent'
 import { WebviewTag } from 'electron'
 import { LiuchengTab } from './components/tabs/LiuchengTab'
@@ -25,17 +25,37 @@ function App(): JSX.Element {
     subscribe('did-navigate', (event) => {
       event.preventDefault()
       const webview = event.target as WebviewTag
-      const tab = tabs.at(Number(webview.getAttribute('internalTabIndex')))
+      const index = Number(webview.getAttribute('internalTabIndex'))
+
+      const oldStore = useBearStore.getState().webviewInstances
+      const tab = oldStore.at(index)
 
       const uuid = tab?.uuid
       const type = tab?.type
+      const canGoBack = webview.canGoBack()
+      const canGoForward = webview.canGoForward()
       const newUrl = webview.getURL()
 
-      console.log('Request coming from webview ' + uuid + ' and the url is: ' + newUrl)
+      if (tab) {
+        console.log('Request coming from webview ' + uuid + ' and the url is: ' + newUrl)
+        tab.canGoBack = canGoBack
+        tab.canGoForward = canGoForward
 
-      if (type === WebviewType.Home) {
-        console.log("It's home")
-      } else if (type === WebviewType.Mindmap) {
+        // Never push the history of home
+        if (type !== WebviewType.Home) {
+          tab.historyUrl.push(newUrl)
+
+          oldStore[index] = tab
+          useBearStore.setState({
+            webviewInstances: oldStore
+          })
+        }
+
+        if (type === WebviewType.Home) {
+          console.log("It's home")
+        } else if (type === WebviewType.Mindmap) {
+          console.log('mindmap')
+        }
       }
 
       unsubscribe('did-navigate', () => {})
@@ -45,6 +65,31 @@ function App(): JSX.Element {
   return (
     <div className="container w-screen h-screen max-w-full justify-items-center">
       <div className="flex h-10">
+        <ul className="flex h-10 shrink items-center bg-zinc-300 dark:bg-zinc-800 pl-1 pr-1">
+          {tabs[activeIndex].canGoBack ? (
+            <button className="mx-1">
+              <ArrowLeft className="text-white w-5 h-5" />
+            </button>
+          ) : (
+            <button className="mx-1" disabled>
+              <ArrowLeft className="text-gray-500 w-5 h-5" />
+            </button>
+          )}
+
+          {tabs[activeIndex].canGoForward ? (
+            <button className="mx-1">
+              <ArrowRight className="text-white w-5 h-5" />
+            </button>
+          ) : (
+            <button className="mx-1" disabled>
+              <ArrowRight className="text-gray-500 w-5 h-5" />
+            </button>
+          )}
+
+          <button className="mx-1">
+            <ArrowClockwise className="text-white w-5 h-5" />
+          </button>
+        </ul>
         <ul className="flex h-10 shrink items-center bg-zinc-300 dark:bg-zinc-800">
           {tabs.map((tab) => (
             <TabSelector
@@ -157,7 +202,7 @@ const TabSelector = ({
               }}
               title="Close tab"
             >
-              <X />
+              <X className='text-gray-500 dark:text-white'/>
             </button>
           </span>
         ) : (

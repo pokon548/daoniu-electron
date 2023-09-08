@@ -25,8 +25,10 @@ window.api.on(ChannelType.Drawing, (arg: unknown) => {
         uuidv4(),
         '思维导图',
         message.url,
+        false,
+        false,
         [message.title],
-        [message.url],
+        [],
         message.webId
       )
     ])
@@ -48,8 +50,10 @@ window.api.on(ChannelType.Website, (arg: unknown) => {
         uuidv4(),
         '网页',
         message.url,
+        false,
+        false,
         [message.title],
-        [message.url],
+        [],
         message.webId
       )
     ])
@@ -71,8 +75,10 @@ window.api.on(ChannelType.LiuchengHome, (arg: unknown) => {
         uuidv4(),
         '流程图 - 首页',
         message.url,
+        false,
+        false,
         [message.title],
-        [message.url],
+        [],
         message.webId
       )
     ])
@@ -94,8 +100,10 @@ window.api.on(ChannelType.Liucheng, (arg: unknown) => {
         uuidv4(),
         '流程图',
         message.url,
+        false,
+        false,
         [message.title],
-        [message.url],
+        [],
         message.webId
       )
     ])

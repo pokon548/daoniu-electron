@@ -23,6 +23,8 @@ interface IWebviewInstance {
   uuid: string
   title: string
   url: string
+  canGoBack: boolean
+  canGoForward: boolean
   historyTitle: string[]
   historyUrl: string[]
   webId: number
@@ -33,6 +35,8 @@ export class WebviewInstance implements IWebviewInstance {
   uuid: string
   title: string
   url: string
+  canGoBack: boolean
+  canGoForward: boolean
   historyTitle: string[]
   historyUrl: string[]
   webId: number
@@ -42,6 +46,8 @@ export class WebviewInstance implements IWebviewInstance {
     uuid: string,
     title: string,
     url: string,
+    canGoBack: boolean,
+    canGoForward: boolean,
     historyTitle: string[],
     historyUrl: string[],
     webId: number
@@ -50,6 +56,8 @@ export class WebviewInstance implements IWebviewInstance {
     this.uuid = uuid
     this.title = title
     this.url = url
+    this.canGoBack = canGoBack
+    this.canGoForward = canGoForward
     this.historyTitle = historyTitle
     this.historyUrl = historyUrl
     this.webId = webId
