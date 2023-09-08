@@ -5,7 +5,16 @@ import { MindmapTab } from './components/tabs/MindmapTab'
 import { WebviewInstance, WebviewType, useBearStore } from './data/store/appStore'
 
 import './styles/react-tabs.css'
-import { ArrowClockwise, ArrowLeft, ArrowRight, Minus, Square, X } from '@phosphor-icons/react'
+import {
+  ArrowClockwise,
+  ArrowLeft,
+  ArrowRight,
+  CaretLeft,
+  CaretRight,
+  Minus,
+  Square,
+  X
+} from '@phosphor-icons/react'
 import { subscribe, unsubscribe } from './lib/customWebviewEvent'
 import { WebviewTag } from 'electron'
 import { LiuchengTab } from './components/tabs/LiuchengTab'
@@ -65,7 +74,7 @@ function App(): JSX.Element {
   return (
     <div className="container w-screen h-screen max-w-full justify-items-center">
       <div className="flex h-10">
-        <ul className="flex h-10 shrink items-center bg-zinc-300 dark:bg-zinc-800 pl-1 pr-1">
+        <ul className="flex h-10 items-center bg-zinc-300 dark:bg-zinc-800 pl-1 pr-1">
           {tabs[activeIndex].canGoBack ? (
             <button className="mx-1">
               <ArrowLeft className="text-white w-5 h-5" />
@@ -89,8 +98,12 @@ function App(): JSX.Element {
           <button className="mx-1">
             <ArrowClockwise className="text-white w-5 h-5" />
           </button>
+
+          <button className="mx-1">
+            <CaretLeft className="text-white w-5 h-5" />
+          </button>
         </ul>
-        <ul className="flex h-10 shrink items-center bg-zinc-300 dark:bg-zinc-800">
+        <ul className="flex h-10 grow items-center bg-zinc-300 dark:bg-zinc-800 overflow-hidden">
           {tabs.map((tab) => (
             <TabSelector
               key={tab.uuid}
@@ -109,11 +122,14 @@ function App(): JSX.Element {
               {tab}
             </TabSelector>
           ))}
+          <div className="titlebar flex h-full w-full growth bg-zinc-300 dark:bg-zinc-800"></div>
         </ul>
 
-        <div className="titlebar flex justify-center place-items-center select-none align-middle w-full bg-zinc-300 dark:bg-zinc-800"></div>
-
         <div className="bg-zinc-300 dark:bg-zinc-800 flex content-center">
+          <button className="mx-1">
+            <CaretRight className="text-white w-5 h-5" />
+          </button>
+
           <button
             onClick={(e): void => {
               e.preventDefault()
@@ -202,7 +218,7 @@ const TabSelector = ({
               }}
               title="Close tab"
             >
-              <X className='text-gray-500 dark:text-white'/>
+              <X className="text-gray-500 dark:text-white" />
             </button>
           </span>
         ) : (
