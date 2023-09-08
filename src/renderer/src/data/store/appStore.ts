@@ -73,6 +73,8 @@ export const useBearStore = create<AppState>()(
         uuidv4(),
         '首页',
         'https://www.zhixi.com/space',
+        false,
+        false,
         ['首页'],
         ['https://www.zhixi.com/space'],
         -1

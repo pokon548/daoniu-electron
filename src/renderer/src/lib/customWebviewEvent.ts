@@ -1,3 +1,5 @@
+import { WebviewTag } from 'electron'
+
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 function subscribe(eventName: string, listener: EventListener) {
   const webviews = document.querySelectorAll('webview')
@@ -14,4 +16,26 @@ function unsubscribe(eventName: string, listener: EventListener) {
   })
 }
 
-export { subscribe, unsubscribe }
+function reload(index: number) {
+  const webviews = document.querySelectorAll('webview')
+  const target = webviews[index] as WebviewTag
+  target.reload()
+}
+
+function goBack(index: number) {
+  const webviews = document.querySelectorAll('webview')
+  const target = webviews[index] as WebviewTag
+  target.goBack()
+}
+
+function goForward(index: number) {
+  const webviews = document.querySelectorAll('webview')
+  const target = webviews[index] as WebviewTag
+  target.goForward()
+}
+function publish(eventName: string, data) {
+  const event = new CustomEvent(eventName, { detail: data })
+  document.dispatchEvent(event)
+}
+
+export { publish, reload, goBack, goForward, subscribe, unsubscribe }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { GeneralWebviewTab } from './components/tabs/GeneralWebviewTab'
 import { HomeTab } from './components/tabs/HomeTab'
 import { MindmapTab } from './components/tabs/MindmapTab'
@@ -6,7 +6,7 @@ import { WebviewInstance, WebviewType, useBearStore } from './data/store/appStor
 
 import './styles/react-tabs.css'
 import { ArrowClockwise, ArrowLeft, ArrowRight, Minus, Square, X } from '@phosphor-icons/react'
-import { subscribe, unsubscribe } from './lib/customWebviewEvent'
+import { goBack, goForward, reload, subscribe, unsubscribe } from './lib/customWebviewEvent'
 import { WebviewTag } from 'electron'
 import { LiuchengTab } from './components/tabs/LiuchengTab'
 
@@ -67,7 +67,12 @@ function App(): JSX.Element {
       <div className="flex h-10">
         <ul className="flex h-10 items-center bg-zinc-300 dark:bg-zinc-800 pl-1 pr-1">
           {tabs[activeIndex].canGoBack ? (
-            <button className="mx-1">
+            <button
+              className="mx-1"
+              onClick={(): void => {
+                goBack(activeIndex)
+              }}
+            >
               <ArrowLeft className="text-white w-5 h-5" />
             </button>
           ) : (
@@ -77,7 +82,12 @@ function App(): JSX.Element {
           )}
 
           {tabs[activeIndex].canGoForward ? (
-            <button className="mx-1">
+            <button
+              className="mx-1"
+              onClick={(): void => {
+                goForward(activeIndex)
+              }}
+            >
               <ArrowRight className="text-white w-5 h-5" />
             </button>
           ) : (
@@ -86,13 +96,18 @@ function App(): JSX.Element {
             </button>
           )}
 
-          <button className="mx-1">
+          <button
+            className="mx-1"
+            onClick={(): void => {
+              reload(activeIndex)
+            }}
+          >
             <ArrowClockwise className="text-white w-5 h-5" />
           </button>
         </ul>
         <ul
           className="tab-switcher scroll-smooth flex h-10 grow items-center bg-zinc-300 dark:bg-zinc-800 overflow-x-hidden overflow-y-hidden"
-          onWheel={(event) => {
+          onWheel={(event): void => {
             const target = event.currentTarget as HTMLUListElement
             const deltaY = event.deltaY
             if (deltaY < 0) {
