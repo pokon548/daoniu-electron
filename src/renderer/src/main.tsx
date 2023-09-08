@@ -82,32 +82,3 @@ window.api.on(ChannelType.LiuchengHome, (arg: unknown) => {
     currentTabIndex: oldStore.length
   })
 })
-
-window.api.on(ChannelType.GeneralUpdateHistory, (arg: unknown) => {
-  const message = arg as NormalUrlMessage
-  const webviewInstances = useBearStore.getState().webviewInstances
-  const targetWebview = webviewInstances.filter((data) => data.webId === message.webId)[0]
-  const targetWebviewId = webviewInstances.indexOf(targetWebview)
-
-  if (targetWebview) {
-    if (targetWebview.historyUrl[-1]) {
-      if (targetWebview.historyUrl[-1] !== message.url) {
-        useBearStore.setState({
-          webviewInstances: webviewInstances.splice(
-            targetWebviewId,
-            1,
-            new WebviewInstance(
-              targetWebview.type,
-              targetWebview.uuid,
-              targetWebview.title,
-              message.url,
-              targetWebview.historyTitle,
-              targetWebview.historyUrl.concat(message.url),
-              targetWebview.webId
-            )
-          )
-        })
-      }
-    }
-  }
-})
