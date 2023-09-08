@@ -5,20 +5,10 @@ import { MindmapTab } from './components/tabs/MindmapTab'
 import { WebviewInstance, WebviewType, useBearStore } from './data/store/appStore'
 
 import './styles/react-tabs.css'
-import {
-  ArrowClockwise,
-  ArrowLeft,
-  ArrowRight,
-  CaretLeft,
-  CaretRight,
-  Minus,
-  Square,
-  X
-} from '@phosphor-icons/react'
+import { ArrowClockwise, ArrowLeft, ArrowRight, Minus, Square, X } from '@phosphor-icons/react'
 import { subscribe, unsubscribe } from './lib/customWebviewEvent'
 import { WebviewTag } from 'electron'
 import { LiuchengTab } from './components/tabs/LiuchengTab'
-import DetectableOverflow from 'react-detectable-overflow'
 
 function App(): JSX.Element {
   const tabs = useBearStore((state) => state.webviewInstances)
@@ -27,8 +17,6 @@ function App(): JSX.Element {
     state.setCurrentTabIndex
   ])
   const removeWebviewById = useBearStore((state) => state.removeWebviewInstanceByIndex)
-
-  const [overflow, setOverflow] = useState(false)
 
   /* TODO: We dangerously assume index here is identical to zustard saved
    * this is not safe and robust
@@ -101,44 +89,43 @@ function App(): JSX.Element {
           <button className="mx-1">
             <ArrowClockwise className="text-white w-5 h-5" />
           </button>
-
-          {overflow ? (
-            <button className="mx-1">
-              <CaretLeft className="text-white w-5 h-5" />
-            </button>
-          ) : null}
         </ul>
-        <DetectableOverflow onChange={setOverflow}>
-          <ul className="flex h-10 grow items-center bg-zinc-300 dark:bg-zinc-800">
-            {tabs.map((tab) => (
-              <TabSelector
-                key={tab.uuid}
-                isActive={tabs.indexOf(tab) === activeIndex}
-                isClosable={tab.type !== WebviewType.Home}
-                onClick={(): void => {
-                  const index = tabs.indexOf(tab)
-                  setActiveIndex(index)
-                }}
-                onClose={(): void => {
-                  const index = tabs.indexOf(tab)
-                  removeWebviewById(index)
-                  setActiveIndex(index - 1)
-                }}
-              >
-                {tab}
-              </TabSelector>
-            ))}
-            <div className="titlebar flex h-full w-full growth bg-zinc-300 dark:bg-zinc-800"></div>
-          </ul>
-        </DetectableOverflow>
+        <ul
+          className="tab-switcher scroll-smooth flex h-10 grow items-center bg-zinc-300 dark:bg-zinc-800 overflow-x-hidden overflow-y-hidden"
+          onWheel={(event) => {
+            const target = event.currentTarget as HTMLUListElement
+            const deltaY = event.deltaY
+            if (deltaY < 0) {
+              console.log('left')
+              target.scrollLeft += 50
+            } else {
+              console.log('right')
+              target.scrollLeft -= 50
+            }
+          }}
+        >
+          {tabs.map((tab) => (
+            <TabSelector
+              key={tab.uuid}
+              isActive={tabs.indexOf(tab) === activeIndex}
+              isClosable={tab.type !== WebviewType.Home}
+              onClick={(): void => {
+                const index = tabs.indexOf(tab)
+                setActiveIndex(index)
+              }}
+              onClose={(): void => {
+                const index = tabs.indexOf(tab)
+                removeWebviewById(index)
+                setActiveIndex(index - 1)
+              }}
+            >
+              {tab}
+            </TabSelector>
+          ))}
+          <div className="titlebar flex h-full w-full growth bg-zinc-300 dark:bg-zinc-800"></div>
+        </ul>
 
         <div className="bg-zinc-300 dark:bg-zinc-800 flex content-center">
-          {overflow ? (
-            <button className="mx-1">
-              <CaretRight className="text-white w-5 h-5" />
-            </button>
-          ) : null}
-
           <button
             onClick={(e): void => {
               e.preventDefault()
