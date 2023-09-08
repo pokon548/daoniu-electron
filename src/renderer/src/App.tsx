@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { GeneralWebviewTab } from './components/tabs/GeneralWebviewTab'
 import { HomeTab } from './components/tabs/HomeTab'
 import { MindmapTab } from './components/tabs/MindmapTab'
@@ -5,6 +6,7 @@ import { WebviewInstance, WebviewType, useBearStore } from './data/store/appStor
 
 import './styles/react-tabs.css'
 import { Minus, Square, X } from '@phosphor-icons/react'
+import { subscribe, unsubscribe } from './lib/customWebviewEvent'
 
 function App(): JSX.Element {
   const tabs = useBearStore((state) => state.webviewInstances)
@@ -13,6 +15,21 @@ function App(): JSX.Element {
     state.setCurrentTabIndex
   ])
   const removeWebviewById = useBearStore((state) => state.removeWebviewInstanceByIndex)
+
+  /* TODO: We dangerously assume index here is identical to zustard saved
+   * this is not safe and robust
+   */
+  useEffect(() => {
+    subscribe('did-navigate', (event) => {
+      event.preventDefault()
+      const webview = event.target as HTMLElement
+      const id = webview.getAttribute('internalTabIndex')
+      const url = event.url
+      console.log('Request coming from webview ' + id + ' and the url is: ' + url)
+
+      unsubscribe('did-navigate', () => {})
+    })
+  })
 
   return (
     <div className="container w-screen h-screen max-w-full justify-items-center">

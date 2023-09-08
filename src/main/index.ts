@@ -46,7 +46,12 @@ function createWindow(): void {
           ChannelType.Drawing,
           new NormalUrlMessage(url, contents.getTitle(), contents.id)
         )
+      } else if (url === 'https://www.zhixi.com/space?page=owner') {
+        // TODO: Jump to personal file
+      } else if (url === 'https://www.zhixi.com/about') {
+        // TODO: Warn users that we are unofficial products
       } else {
+        console.log(url)
         mainWindow.webContents.send(
           ChannelType.Website,
           new NormalUrlMessage(url, contents.getTitle(), contents.id)
@@ -54,22 +59,6 @@ function createWindow(): void {
       }
       return { action: 'deny' }
     })
-  })
-
-  // TODO: Write advanced logic for tab state
-  session.defaultSession.webRequest.onBeforeRequest((details, callback) => {
-    if (details.webContents) {
-      const title = details.webContents?.getTitle()
-      const id = details.webContents?.id
-      const url = details.webContents?.getURL()
-
-      mainWindow.webContents.send(
-        ChannelType.GeneralUpdateHistory,
-        new NormalUrlMessage(url, title, id)
-      )
-    }
-
-    callback({})
   })
 
   // HMR for renderer base on electron-vite cli.
