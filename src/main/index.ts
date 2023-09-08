@@ -53,13 +53,12 @@ function createWindow(): void {
     })
   })
 
+  // TODO: Write advanced logic for tab state
   session.defaultSession.webRequest.onBeforeRequest((details, callback) => {
     if (details.webContents) {
       const title = details.webContents?.getTitle()
       const id = details.webContents?.id
       const url = details.webContents?.getURL()
-
-      console.log(title + ', ' + id + ', ' + url)
 
       mainWindow.webContents.send(
         ChannelType.GeneralUpdateHistory,

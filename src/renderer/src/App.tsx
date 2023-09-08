@@ -1,5 +1,4 @@
 import { HomeTab } from './components/tabs/HomeTab'
-import { LiuchengTab } from './components/tabs/LiuchengTab'
 import { MindmapTab } from './components/tabs/MindmapTab'
 import { WebviewInstance, WebviewType, useBearStore } from './data/store/appStore'
 
@@ -17,7 +16,7 @@ function App(): JSX.Element {
   return (
     <div className="container w-screen h-screen max-w-full justify-items-center">
       <div className="flex h-10">
-        <ul className="flex h-10 items-center bg-zinc-300 dark:bg-zinc-800 w-full">
+        <ul className="flex h-10 shrink items-center bg-zinc-300 dark:bg-zinc-800">
           {tabs.map((tab) => (
             <TabSelector
               key={tab.uuid}
